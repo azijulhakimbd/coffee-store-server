@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 // MongoDB 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.S3_BUCKET}:${process.env.SECRET_KEY}@simple-crud.fod3bbj.mongodb.net/?retryWrites=true&w=majority&appName=simple-crud`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -42,7 +42,13 @@ async function run() {
       res.send(result);
     })
 
-
+    // Delete method
+    app.delete('/coffees/:id',async(req,res)=>{
+      const id =req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result =await coffeesCollection.deleteOne(query);
+      res.send(result)
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
